@@ -1,6 +1,5 @@
 package model;
 
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -49,6 +48,7 @@ public class Board {
 
     /**
      * Calcule le nombre de mines voisines pour chaque champ de la grille.
+     * Pour chaque champ non miné, le nombre de mines adjacentes est calculé et stocké.
      */
     private void calculateNeighbourMineCounts() {
         for (int y = 0; y < height; y++) {
@@ -76,6 +76,7 @@ public class Board {
 
     /**
      * Vérifie si le joueur a gagné.
+     * Le joueur a gagné si tous les champs sans mine ont été ouverts.
      *
      * @return true si le joueur a gagné (tous les champs sans mine sont ouverts), false sinon.
      */
@@ -93,6 +94,7 @@ public class Board {
 
     /**
      * Pose ou enlève un drapeau sur un champ.
+     * Le drapeau ne peut être posé que sur un champ qui n'est pas ouvert.
      *
      * @param coord Coordonnée du champ à draper.
      */
@@ -105,6 +107,7 @@ public class Board {
 
     /**
      * Retourne le nombre de mines restantes à découvrir.
+     * Le nombre de mines restantes est calculé en fonction du nombre de drapeaux posés.
      *
      * @return Nombre de mines restantes.
      */
@@ -146,6 +149,8 @@ public class Board {
 
     /**
      * Révèle un champ spécifié par sa coordonnée.
+     * Cette méthode révèle le champ spécifié et ses voisins de manière récursive si nécessaire.
+     * Si une mine est découverte, la méthode retourne immédiatement.
      *
      * @param coord Coordonnée du champ à révéler.
      * @return Résultat de la révélation des champs.
@@ -166,6 +171,8 @@ public class Board {
 
     /**
      * Révèle un champ et ses voisins de manière récursive si nécessaire.
+     * Si le champ est non ouvert et ne contient pas de mine, il est marqué comme ouvert.
+     * Si le champ est sans mine et n'a pas de mines voisines, la méthode révèlera les champs voisins.
      *
      * @param field          Le champ à révéler.
      * @param revealedFields Collection des champs révélés.
@@ -203,7 +210,8 @@ public class Board {
 
     /**
      * Révèle plusieurs champs en fonction du nombre de mines voisines.
-     * Cette méthode est appelée après un clic multiple.
+     * Cette méthode est appelée après un clic multiple. Si le nombre de drapeaux autour du champ
+     * correspond au nombre de mines voisines, tous les champs adjacents seront révélés.
      *
      * @param coord Coordonnée du champ à révéler.
      * @return Résultat de la révélation des champs.
@@ -248,5 +256,39 @@ public class Board {
         }
 
         return new RevealFieldsResult(revealedFields);
+    }
+
+    // Getters et setters
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public Field[][] getFieldsArray() {
+        return fields;
+    }
+
+    public void setFieldsArray(Field[][] fields) {
+        this.fields = fields;
+    }
+
+    public Set<Field> getMinesSet() {
+        return mines;
+    }
+
+    public void setMinesSet(Set<Field> mines) {
+        this.mines = mines;
     }
 }
