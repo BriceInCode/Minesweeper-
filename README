@@ -1,0 +1,52 @@
+# Minesweeper Game
+
+## Description
+
+Cette application est une réplique du jeu classique Minesweeper, développée en Java avec une interface graphique utilisant Swing. Le jeu permet aux utilisateurs de sélectionner différents niveaux de difficulté et de jouer en mode normal ou debug.
+
+## Fonctionnalités
+
+- **Niveaux de difficulté :** Débutant, Intermédiaire, Expert, et personnalisé.
+- **Interface graphique :** Utilisation de Swing pour une expérience utilisateur intuitive.
+- **Mode debug :** Option pour afficher les mines pendant le jeu.
+- **Logique de jeu complète :** Gestion des mines, des drapeaux, et des révélations de cases.
+
+## Règles de conception
+
+- **Modularité :** Le code est structuré en classes distinctes pour chaque composant du jeu (Level, Coordinate, Field, RevealFieldsResult, Board).
+- **Extensibilité :** Facilité d'ajout de nouveaux niveaux de difficulté ou de fonctionnalités supplémentaires.
+- **UI/UX :** Interface utilisateur conçue pour être intuitive et réactive.
+
+## Règles de modélisation
+
+- **Level :** Gère les niveaux de difficulté et les dimensions du plateau.
+- **Coordinate :** Représente une position sur le plateau.
+- **Field :** Représente une case du plateau avec des attributs comme la présence de mines, de drapeaux, et le nombre de mines voisines.
+- **RevealFieldsResult :** Gère les résultats de la révélation des cases.
+- **Board :** Gère le plateau de jeu et la logique principale.
+
+## Utilisation
+
+1. **Lancer le jeu :** Exécutez la classe `MinesweeperGame` pour démarrer le jeu.
+2. **Sélectionner un niveau :** Choisissez un niveau de difficulté dans le menu.
+3. **Jouer :** Cliquez gauche pour révéler une case, cliquez droit pour poser un drapeau.
+4. **Mode debug :** Activez le mode debug pour voir les mines pendant le jeu.
+
+## Installation
+
+1. **Prérequis :** Assurez-vous d'avoir Java Development Kit (JDK) installé sur votre machine.
+2. **Cloner le dépôt :** Clonez ce dépôt sur votre machine locale.
+3. **Ouvrir dans IntelliJ :** Ouvrez le projet dans IntelliJ IDEA.
+4. **Exécuter :** Exécutez la classe `MinesweeperGame` pour lancer le jeu.
+
+## Contributions
+
+Les contributions sont les bienvenues ! Si vous souhaitez contribuer, veuillez suivre ces étapes :
+
+1. **Forker le dépôt :** Forker ce dépôt sur votre compte GitHub.
+2. **Créer une branche :** Créez une nouvelle branche pour vos modifications.
+3. **Soumettre une pull request :** Soumettez une pull request avec vos modifications.
+
+## Licence
+
+Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus de détails.
