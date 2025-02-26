@@ -26,6 +26,7 @@ public class MinesweeperGUI extends JFrame {
     private JButton resetButton;
     private boolean gamePaused;
     private int score;
+    private boolean gameOver = false; // Ajouté pour savoir si la partie est terminée
 
     /**
      * Constructeur de la classe MinesweeperGUI. Initialise la fenêtre du jeu, le panneau de jeu,
@@ -89,6 +90,7 @@ public class MinesweeperGUI extends JFrame {
                     timer.start();
                     gamePaused = false;
                     enableFieldButtons(true);
+                    gameOver = false; // Réinitialiser l'état du jeu
                 }
             }
         });
@@ -114,6 +116,7 @@ public class MinesweeperGUI extends JFrame {
                 scoreLabel.setText("Score: 0");
                 resetGame();
                 enableFieldButtons(true);
+                gameOver = false; // Réinitialiser l'état du jeu
             }
         });
     }
@@ -145,13 +148,17 @@ public class MinesweeperGUI extends JFrame {
      * @param field Le champ correspondant à ce bouton.
      */
     private void updateButton(JButton button, Field field) {
+        if (gameOver) {
+            return; // Empêche l'incrémentation du score et toute action supplémentaire après la fin de la partie
+        }
+
         if (field.isOpened()) {
             if (field.hasMine()) {
                 button.setText("💣");
             } else {
                 int neighbourMines = field.getNeighbourMineCount();
                 button.setText(neighbourMines > 0 ? String.valueOf(neighbourMines) : "");
-                score++;
+                score++; // Incrémenter le score seulement si la partie n'est pas terminée
                 scoreLabel.setText("Score: " + score);
             }
             button.setEnabled(false);
@@ -194,22 +201,29 @@ public class MinesweeperGUI extends JFrame {
          */
         @Override
         public void mousePressed(MouseEvent e) {
-            if (gamePaused) return;
+            if (gamePaused || gameOver) return; // Si la partie est en pause ou terminée, ne rien faire
 
             if (e.getButton() == MouseEvent.BUTTON1) {
                 RevealFieldsResult result = board.revealFields(new Coordinate(x, y));
                 for (Field field : result.getRevealedFields()) {
                     updateButton(buttons[field.getCoordinate().getX()][field.getCoordinate().getY()], field);
                 }
+
                 if (result.getState() == RevealFieldsResult.RevealFieldState.FOUND_MINE) {
+                    // Partie terminée, on affiche un message et on dévoile toutes les mines
                     JOptionPane.showMessageDialog(MinesweeperGUI.this, "Partie terminée ! Vous avez touché une mine.\nDurée: " + timeElapsed + " s\nScore: " + score);
                     revealAllMines();
+                    gameOver = true; // Marque la fin du jeu
                     timer.stop();
                 } else if (board.hasWon()) {
+                    // Partie gagnée, on affiche un message et on dévoile toutes les cases
                     JOptionPane.showMessageDialog(MinesweeperGUI.this, "Félicitations ! Vous avez gagné !\nDurée: " + timeElapsed + " s\nScore: " + score);
+                    revealAllFields(); // Cette méthode dévoile toutes les cases
+                    gameOver = true; // Marque la fin du jeu
                     timer.stop();
                 }
             } else if (e.getButton() == MouseEvent.BUTTON3) {
+                // Gestion du clic droit pour poser un drapeau
                 board.flagField(new Coordinate(x, y));
                 updateButton(buttons[x][y], board.getFields().stream()
                         .filter(f -> f.getCoordinate().equals(new Coordinate(x, y)))
@@ -227,6 +241,22 @@ public class MinesweeperGUI extends JFrame {
             JButton button = buttons[field.getCoordinate().getX()][field.getCoordinate().getY()];
             button.setText("💣");
             button.setEnabled(false);
+        }
+    }
+
+    /**
+     * Révèle toutes les cases à la fin du jeu (gagné ou perdu).
+     */
+    private void revealAllFields() {
+        for (int x = 0; x < board.getWidth(); x++) {
+            for (int y = 0; y < board.getHeight(); y++) {
+                int finalX = x;
+                int finalY = y;
+                Field field = board.getFields().stream()
+                        .filter(f -> f.getCoordinate().getX() == finalX && f.getCoordinate().getY() == finalY)
+                        .findFirst().orElse(null);
+                updateButton(buttons[x][y], field); // Révèle toutes les cellules
+            }
         }
     }
 
